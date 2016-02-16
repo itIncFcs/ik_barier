@@ -16,6 +16,8 @@ hs_err_pid*
 
 #Project file
 *.iml
+*.ipr
+*.iws
 .idea/
 
 # Generated files
