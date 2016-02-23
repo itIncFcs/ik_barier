@@ -4,9 +4,9 @@ import java.util.ArrayList;
 /**
  * Created by Вадим on 22.02.2016.
  */
-public class DBIO {
-    private static ArrayList<String> numbers;
-    private static String number;
+public class DBIOtxt {
+    private ArrayList<String> numbers;
+    private String number;
 
     public ArrayList<String> getInput(){
         return input();
@@ -17,7 +17,7 @@ public class DBIO {
         return output();
     }
 
-    private static ArrayList<String> input(){
+    private ArrayList<String> input(){
         File db = new File("DB.txt");
         numbers = new ArrayList<>();
         try{
@@ -42,7 +42,7 @@ public class DBIO {
         return numbers;
     }
 
-    private static boolean output(){
+    private boolean output(){
         File db = new File("DB.txt");
 
         try {
