@@ -2,59 +2,68 @@ import java.io.*;
 import java.util.ArrayList;
 
 /**
- * Created by Вадим on 22.02.2016.
+ * Created by Вадим on 25.02.2016.
  */
-public class DBIOtxt {
-    private ArrayList<String> numbers;
-    private String number;
+public class DBIOtxt implements DBIO{
+    private ArrayList<String> bufNums;
+    private File database;
+    private BufferedReader br;
+    private BufferedWriter bw;
 
-    public ArrayList<String> getInput(){
-        return input();
+    @Override
+    public boolean connect(String connectionDataBase) throws Exception {
+        database = new File(connectionDataBase);
+        bufNums = new ArrayList<>();
+        return database.exists();
     }
 
-    public boolean setOutput(String number){
-        this.number = number + "\n";
-        return output();
+    @Override
+    public boolean create(String connectionDataBase, String coloumns) throws Exception {
+        database = new File(connectionDataBase);
+        return database.createNewFile();
     }
 
-    private ArrayList<String> input(){
-        File db = new File("DB.txt");
-        numbers = new ArrayList<>();
-        try{
-            FileInputStream fis = new FileInputStream(db);
-            BufferedReader br = new BufferedReader(new InputStreamReader(fis));
+    @Override
+    public boolean close(ArrayList<String> numbers) throws Exception {
+        bw = new BufferedWriter(new FileWriter(database));
+        bufNums = numbers;
+        database.delete();
+        database.createNewFile();
 
-            while (br.ready())
-                numbers.add(br.readLine());
+        for (String s : bufNums)
+            bw.append(s + "\n");
 
-            br.close();
-            fis.close();
-
-        } catch (FileNotFoundException e) {
-            System.out.println("Can`t read file!");
-            numbers.add("File doesn`t exists!");
-            return numbers;
-        } catch (IOException e) {
-            e.printStackTrace();
-            numbers.add("Can`t read file!");
-            return numbers;
-        }
-        return numbers;
-    }
-
-    private boolean output(){
-        File db = new File("DB.txt");
-
-        try {
-            FileWriter write = new FileWriter(db, true);
-            write.append(number);
-            write.flush();
-            write.close();
-        } catch (IOException e) {
-            System.out.println("Can`t write to file!");
-            return false;
-        }
-
+        bufNums.clear();
+        bw.flush();
+        br.close();
+        bw.close();
         return true;
+    }
+
+    @Override
+    public boolean add(String number, String name) throws Exception {
+        if (!bufNums.contains(number)) {
+            bufNums.add(number);
+            return true;
+        }else return false;
+    }
+
+    @Override
+    public boolean delete(String number) throws Exception {
+        if (bufNums.contains(number)) {
+            bufNums.remove(number);
+            return true;
+        } else {return false;}
+    }
+
+    @Override
+    public ArrayList<String> select() throws Exception {
+        br = new BufferedReader(new FileReader(database));
+
+        String s;
+        while ((s = br.readLine()) != null)
+            bufNums.add(s);
+
+        return bufNums;
     }
 }
