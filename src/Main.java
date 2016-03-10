@@ -2,12 +2,14 @@ import jssc.SerialPortException;
 
 import java.util.Scanner;
 
+
 /**
  * Created by ����� on 16.02.2016.
  */
 public class Main {
     static SerialChannelToController serialChannelToController = null;
-    public static void main(String[] args){
+
+    public static void main(String[] args) {
 
         try {
             serialChannelToController = new SerialChannelToController("/dev/ttyUSB0");
@@ -26,11 +28,9 @@ public class Main {
 
         } catch (SerialPortException e) {
             e.printStackTrace();
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
-        }
-        finally {
+        } finally {
             try {
                 serialChannelToController.close();
             } catch (Exception e) {
